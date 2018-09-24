@@ -185,6 +185,26 @@
                 </configuration>
             </plugin>
 
+            <!-- Подключаем проверку на ошибки при помощи FindBug -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.4</version>
+            </plugin>
+
+            <!--Подключаем проверку на ошибки при помощи PMD-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+            </plugin>
+
+            <!--Подключаем проверку на ошибки при помощи SonarQube-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>2.7.1</version>
+            </plugin>
+
         </plugins>
 
     </build>
