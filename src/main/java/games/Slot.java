@@ -3,13 +3,13 @@ package games;
 import java.util.Random;
 
 public class Slot {
-    public static void main(String[] args) {
-        final int DEFAULT_CASH = 100;
-        final int DEFAULT_BET = 10;
-        final int DEFAULT_WIN = 10000;
-        final int DEFAULT_SIZE = 8;
-        final int DEFAULT_START_COUNTER = 0;
+    public static final int DEFAULT_CASH = 100;
+    public static final int DEFAULT_BET = 10;
+    public static final int DEFAULT_WIN = 10000;
+    public static final int DEFAULT_SIZE = 8;
+    public static final int DEFAULT_START_COUNTER = 0;
 
+    public static void main(String[] args) {
         int cash = DEFAULT_CASH;
         int bet = DEFAULT_BET;
         int win = DEFAULT_WIN;
