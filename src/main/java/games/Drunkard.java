@@ -1,5 +1,7 @@
 package games;
 
+import org.apache.commons.math3.util.MathArrays;
+
 import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Random;
@@ -7,67 +9,54 @@ import java.util.Random;
 public class Drunkard {
     private static final int PARS_TOTAL_COUNT = Par.values().length;
     private static final int CARDS_TOTAL_COUNT = PARS_TOTAL_COUNT * Suit.values().length;
+    private static int[][] playersCards = new int[2][CARDS_TOTAL_COUNT];
+    private static int[] playersCardsBeginCursors = new int[2];
+    private static int[] playersCardsEndCursors = new int[2];
+
 
     public static void main(String[] args) {
-        int[] deck1 = new int[CARDS_TOTAL_COUNT];
-        int[] deck2 = new int[CARDS_TOTAL_COUNT];
-        generateDecks(deck1, deck2);
-        int firstPlayerPointer = 0;
-        int firstPlayerSumm = CARDS_TOTAL_COUNT/2;
-        int secondPlayerPointer = 0;
-        int secondPlayerSumm = CARDS_TOTAL_COUNT/2;
-        System.out.println("Начинаем игру! Напоминаю правила, бубны > треф > червей > пик!");
-        while (!haveWinner(firstPlayerSumm, secondPlayerSumm)) {
-            System.out.println("Начинаем розыгрыш!");
-            System.out.printf("Количество карту у первого игрока - %d, количество карт у второго игрока - %d%n", firstPlayerSumm, secondPlayerSumm);
-            if (deck1[firstPlayerPointer]==-1) {
-                firstPlayerPointer++;
-                if (firstPlayerPointer==CARDS_TOTAL_COUNT) firstPlayerPointer=0;
-                continue;
-            }
-            if (deck2[secondPlayerPointer]==-1) {
-                secondPlayerPointer++;
-                if (secondPlayerPointer==CARDS_TOTAL_COUNT) secondPlayerPointer=0;
-                continue;
-            }
-            System.out.printf("Карта первого игрока - %s, карта второго игрока - %s%n", toString(deck1[firstPlayerPointer]), toString(deck2[secondPlayerPointer]));
-            if (deck1[firstPlayerPointer]%PARS_TOTAL_COUNT>deck2[secondPlayerPointer]%PARS_TOTAL_COUNT) {
-                System.out.printf("Выиграл первый игрок, т.к. %s > %s%n", toString(deck1[firstPlayerPointer]), toString(deck2[secondPlayerPointer]));
-                addCard(deck1, firstPlayerPointer, deck1[firstPlayerPointer]);
-                deck1[firstPlayerPointer]=-1;
-                addCard(deck1, firstPlayerPointer, deck2[secondPlayerPointer]);
-                firstPlayerSumm++;
-                secondPlayerSumm--;
-            } else if (deck1[firstPlayerPointer]%PARS_TOTAL_COUNT<deck2[secondPlayerPointer]%PARS_TOTAL_COUNT) {
-                System.out.printf("Выиграл второй игрок, т.к. %s > %s%n", toString(deck2[secondPlayerPointer]), toString(deck1[firstPlayerPointer]));
-                addCard(deck2, secondPlayerPointer, deck2[secondPlayerPointer]);
-                deck2[secondPlayerPointer]=-1;
-                addCard(deck2, secondPlayerPointer, deck1[firstPlayerPointer]);
-                secondPlayerSumm++;
-                firstPlayerSumm--;
-            } else if (deck1[firstPlayerPointer]/PARS_TOTAL_COUNT>deck2[secondPlayerPointer]/PARS_TOTAL_COUNT) {
-                System.out.printf("Выиграл первый игрок, т.к. %s > %s%n", toString(deck1[firstPlayerPointer]), toString(deck2[secondPlayerPointer]));
-                addCard(deck1, firstPlayerPointer, deck1[firstPlayerPointer]);
-                deck1[firstPlayerPointer]=-1;
-                addCard(deck1, firstPlayerPointer, deck2[secondPlayerPointer]);
-                firstPlayerSumm++;
-                secondPlayerSumm--;
+        generateCards(playersCards);
+        int[] player1Cards = playersCards[0];
+        int[] player2Cards = playersCards[1];
+        int player1Card;
+        int player2Card;
+        int sum1;
+        int sum2;
+        playersCardsBeginCursors[0]=0;
+        playersCardsBeginCursors[1]=0;
+        playersCardsEndCursors[0]=CARDS_TOTAL_COUNT/2;
+        playersCardsEndCursors[1]=CARDS_TOTAL_COUNT/2;
+        while(!gameOver()) {
+            player1Card = player1Cards[playersCardsBeginCursors[0]];
+            playersCardsBeginCursors[0]=incrementIndex(playersCardsBeginCursors[0]);
+            player2Card = player2Cards[playersCardsBeginCursors[1]];
+            playersCardsBeginCursors[1]=incrementIndex(playersCardsBeginCursors[1]);
+            System.out.printf("Игрок №1 карта : %s, игрок №2 карта : %s.", toString(player1Card), toString(player2Card));
+            if (getPar(player1Card).ordinal()>getPar(player2Card).ordinal()) {
+                player1Cards[playersCardsEndCursors[0]]=player1Card;
+                playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
+                player1Cards[playersCardsEndCursors[0]]=player2Card;
+                playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
+                System.out.print("Выиграл игрок 1!");
+            } else if (getPar(player1Card).ordinal()<getPar(player2Card).ordinal()) {
+                player2Cards[playersCardsEndCursors[1]]=player2Card;
+                playersCardsEndCursors[1]=incrementIndex(playersCardsEndCursors[1]);
+                player1Cards[playersCardsEndCursors[1]]=player1Card;
+                playersCardsEndCursors[1]=incrementIndex(playersCardsEndCursors[1]);
+                System.out.print("Выиграл игрок 2!");
             } else {
-                System.out.printf("Выиграл второй игрок, т.к. %s > %s%n", toString(deck2[secondPlayerPointer]), toString(deck1[firstPlayerPointer]));
-                addCard(deck2, secondPlayerPointer, deck2[secondPlayerPointer]);
-                deck2[secondPlayerPointer]=-1;
-                addCard(deck2, secondPlayerPointer, deck1[firstPlayerPointer]);
-                secondPlayerSumm++;
-                firstPlayerSumm--;
+                player1Cards[playersCardsEndCursors[0]]=player1Card;
+                playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
+                player2Cards[playersCardsEndCursors[1]]=player2Card;
+                playersCardsEndCursors[1]=incrementIndex(playersCardsEndCursors[1]);
+                System.out.print("Спор - каждый остаётся при своих!");
             }
-            firstPlayerPointer++;
-            secondPlayerPointer++;
-            if (firstPlayerPointer==CARDS_TOTAL_COUNT) firstPlayerPointer=0;
-            if (secondPlayerPointer==CARDS_TOTAL_COUNT) secondPlayerPointer=0;
+            sum1 = playersCardsBeginCursors[0]<=playersCardsEndCursors[0] ? playersCardsEndCursors[0]-playersCardsBeginCursors[0] : playersCardsEndCursors[0]-playersCardsBeginCursors[0]+CARDS_TOTAL_COUNT;
+            sum2 = playersCardsBeginCursors[1]<=playersCardsEndCursors[1] ? playersCardsEndCursors[1]-playersCardsBeginCursors[1] : playersCardsEndCursors[1]-playersCardsBeginCursors[1]+CARDS_TOTAL_COUNT;
+            System.out.printf("У игрока №1 %d карт, у игрока №2 %d карт%n", sum1, sum2);
+            if (sum1==CARDS_TOTAL_COUNT || sum2==CARDS_TOTAL_COUNT) break;
         }
-
-        System.out.printf("Игра окончена, победил %s!!!%n", getWinner(firstPlayerSumm));
-
+        System.out.println("Игра окончена!");
     }
 
     enum Suit {
@@ -101,94 +90,26 @@ public class Drunkard {
         return getPar(cardNumber) + " " + getSuite(cardNumber);
     }
 
-    /**
-     * Метод для определения наличия значения-карты в массиве карт
-     *
-     * @param deck - массив карт
-     * @param value - проверяемое значение-карта
-     * @return
-     */
-    private static boolean isExist(int[] deck, int value) {
-        for (int i=0; i<deck.length; i++) {
-            if(deck[i]==value) return true;
+    private static int incrementIndex(int i) {
+        return (i + 1) % CARDS_TOTAL_COUNT;
+    }
+
+    private static void generateCards(int[][] cards) {
+        int[] src = new int[CARDS_TOTAL_COUNT];
+        for (int i=0; i<CARDS_TOTAL_COUNT; i++) {
+            src[i]=i;
         }
+        MathArrays.shuffle(src);
+        for (int i=0; i<CARDS_TOTAL_COUNT; i++) {
+            if (i<CARDS_TOTAL_COUNT/2) cards[0][i]=src[i];
+            else cards[1][i-CARDS_TOTAL_COUNT/2]=src[i];
+        }
+
+    }
+
+    private static boolean gameOver () {
         return false;
     }
 
-    /**
-     *
-     * Метод генерации пачек карт
-     *
-     * @param deck1 - массив карт игрока 1
-     * @param deck2 - массив карт игрока 2
-     */
-    private static void generateDecks(int[] deck1, int[] deck2 ) {
-        for (int i=0; i<CARDS_TOTAL_COUNT;i++) {
-            deck1[i]=-1;
-            deck2[i]=-1;
-        }
-        Random random = new Random();
-        for (int i=0; i<CARDS_TOTAL_COUNT/2; i++) {
-            int randomInt = random.nextInt(CARDS_TOTAL_COUNT);
-            while (isExist(deck1, randomInt) || isExist(deck2, randomInt)) {
-                randomInt = random.nextInt(CARDS_TOTAL_COUNT);
-            }
-            deck1[i]=randomInt;
-        }
-        for (int i=0; i<CARDS_TOTAL_COUNT/2; i++) {
-            int randomInt = random.nextInt(CARDS_TOTAL_COUNT);
-            while (isExist(deck1, randomInt) || isExist(deck2, randomInt)) {
-                randomInt = random.nextInt(CARDS_TOTAL_COUNT);
-            }
-            deck2[i]=randomInt;
-        }
-    }
 
-    /**
-     * Метод определяет наличие победителя
-     * @param firstPlayerSumm
-     * @param secondPlayerSumm
-     * @return
-     */
-    private static boolean haveWinner(int firstPlayerSumm, int secondPlayerSumm) {
-        return firstPlayerSumm==CARDS_TOTAL_COUNT || secondPlayerSumm==CARDS_TOTAL_COUNT;
-    }
-
-    /**
-     * Метод находит ближайший справа индекс, чтобы имитировать перенос карт в конец колоды
-     * @param deck
-     * @param startIndex
-     * @return
-     */
-    private static int findEmptyIndex(int[] deck, int startIndex) {
-        if (startIndex+1<deck.length) {
-            for (int i=startIndex+1; i<deck.length; i++) {
-                if (deck[i]==-1) return i;
-            }
-        } else {
-            for (int i=0; i<=startIndex; i++) {
-                if (deck[i]==-1) return i;
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * Метод добавления карты
-     * @param deck
-     * @param startIndex
-     * @param value
-     */
-    private static void addCard (int[] deck, int startIndex, int value) {
-        deck[findEmptyIndex(deck, startIndex)]=value;
-    }
-
-    /**
-     * Метод выводит победителя игры
-     * @param first
-     * @return
-     */
-    private static String getWinner(int first) {
-        return first == 36 ? "первый игрок" : "второй игрок";
-    }
 }
