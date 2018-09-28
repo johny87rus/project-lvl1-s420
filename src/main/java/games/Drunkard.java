@@ -19,6 +19,7 @@ public class Drunkard {
         int player2Card;
         int sum1;
         int sum2;
+        int flag;
         playersCardsBeginCursors[0]=0;
         playersCardsBeginCursors[1]=0;
         playersCardsEndCursors[0]=CARDS_TOTAL_COUNT/2;
@@ -28,29 +29,36 @@ public class Drunkard {
             playersCardsBeginCursors[0]=incrementIndex(playersCardsBeginCursors[0]);
             player2Card = player2Cards[playersCardsBeginCursors[1]];
             playersCardsBeginCursors[1]=incrementIndex(playersCardsBeginCursors[1]);
-            System.out.printf("Игрок №1 карта : %s, игрок №2 карта : %s.", toString(player1Card), toString(player2Card));
+            System.out.printf("Игрок №1 карта : %s, игрок №2 карта : %s. ", toString(player1Card), toString(player2Card));
             if (getPar(player1Card).ordinal()>getPar(player2Card).ordinal()) {
                 player1Cards[playersCardsEndCursors[0]]=player1Card;
                 playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
                 player1Cards[playersCardsEndCursors[0]]=player2Card;
                 playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
                 System.out.print("Выиграл игрок 1!");
+                flag=1;
             } else if (getPar(player1Card).ordinal()<getPar(player2Card).ordinal()) {
                 player2Cards[playersCardsEndCursors[1]]=player2Card;
                 playersCardsEndCursors[1]=incrementIndex(playersCardsEndCursors[1]);
                 player1Cards[playersCardsEndCursors[1]]=player1Card;
                 playersCardsEndCursors[1]=incrementIndex(playersCardsEndCursors[1]);
                 System.out.print("Выиграл игрок 2!");
+                flag=2;
             } else {
                 player1Cards[playersCardsEndCursors[0]]=player1Card;
                 playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
                 player2Cards[playersCardsEndCursors[1]]=player2Card;
                 playersCardsEndCursors[1]=incrementIndex(playersCardsEndCursors[1]);
                 System.out.print("Спор - каждый остаётся при своих!");
+                flag=0;
             }
-            sum1 = playersCardsBeginCursors[0]<=playersCardsEndCursors[0] ? playersCardsEndCursors[0]-playersCardsBeginCursors[0] : playersCardsEndCursors[0]-playersCardsBeginCursors[0]+CARDS_TOTAL_COUNT;
-            sum2 = playersCardsBeginCursors[1]<=playersCardsEndCursors[1] ? playersCardsEndCursors[1]-playersCardsBeginCursors[1] : playersCardsEndCursors[1]-playersCardsBeginCursors[1]+CARDS_TOTAL_COUNT;
-            System.out.printf("У игрока №1 %d карт, у игрока №2 %d карт%n", sum1, sum2);
+            sum1 = playersCardsBeginCursors[0]<playersCardsEndCursors[0] ? playersCardsEndCursors[0]-playersCardsBeginCursors[0] : playersCardsEndCursors[0]-playersCardsBeginCursors[0]+CARDS_TOTAL_COUNT;
+            sum2 = playersCardsBeginCursors[1]<playersCardsEndCursors[1] ? playersCardsEndCursors[1]-playersCardsBeginCursors[1] : playersCardsEndCursors[1]-playersCardsBeginCursors[1]+CARDS_TOTAL_COUNT;
+            if (sum1==sum2 && sum2==CARDS_TOTAL_COUNT) {
+                sum1 = flag==1 ? sum1 : 0;
+                sum2 = flag==2 ? sum2 : 0;
+            }
+            System.out.printf(" У игрока №1 %d карт, у игрока №2 %d карт%n", sum1, sum2);
             if (sum1==CARDS_TOTAL_COUNT || sum2==CARDS_TOTAL_COUNT) break;
         }
         System.out.println("Игра окончена!");
