@@ -2,9 +2,6 @@ package games;
 
 import org.apache.commons.math3.util.MathArrays;
 
-import java.sql.SQLOutput;
-import java.util.Arrays;
-import java.util.Random;
 
 public class Drunkard {
     private static final int PARS_TOTAL_COUNT = Par.values().length;
