@@ -2,9 +2,6 @@ package games;
 
 import org.apache.commons.math3.util.MathArrays;
 
-import java.util.Arrays;
-
-
 public class Drunkard {
     private static final int PARS_TOTAL_COUNT = Par.values().length;
     private static final int CARDS_TOTAL_COUNT = PARS_TOTAL_COUNT * Suit.values().length;
@@ -31,7 +28,7 @@ public class Drunkard {
             player2Card = player2Cards[playersCardsBeginCursors[1]];
             playersCardsBeginCursors[1]=incrementIndex(playersCardsBeginCursors[1]);
             System.out.printf("Игрок №1 карта : %s, игрок №2 карта : %s. ", toString(player1Card), toString(player2Card));
-            if (getPar(player1Card).ordinal()>getPar(player2Card).ordinal() || (getPar(player1Card)==Par.SIX && getPar(player2Card)==Par.ACE)) {
+            if ((getPar(player1Card).ordinal()>getPar(player2Card).ordinal() && getPar(player2Card)!=Par.SIX && getPar(player1Card)!=Par.ACE) || (getPar(player1Card)==Par.SIX && getPar(player2Card)==Par.ACE)) {
                 player1Cards[playersCardsEndCursors[0]]=player1Card;
                 playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
                 player1Cards[playersCardsEndCursors[0]]=player2Card;
