@@ -11,3 +11,5 @@ build : clean
 update :
 	./mvnw versions:update-properties
 	./mvnw versions:display-plugin-updates
+test :
+	./mvnw surefire:test
