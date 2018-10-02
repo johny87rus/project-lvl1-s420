@@ -2,6 +2,8 @@ package games;
 
 import org.apache.commons.math3.util.MathArrays;
 
+import java.io.IOException;
+
 import static games.CardUtils.CARDS_TOTAL_COUNT;
 import static games.CardUtils.getPar;
 
@@ -59,7 +61,19 @@ public class Drunkard {
             }
             System.out.printf(" У игрока №1 %d карт, у игрока №2 %d карт%n", sum1, sum2);
         }
-        System.out.println("Игра окончена!");
+        if (sum1>sum2) {
+            Choice.cash += 10;
+            System.out.println("Игра окончена! Вы выиграли 10$");
+        }
+        else {
+            Choice.cash -= 10;
+            System.out.println("Игра окончена! Вы проиграли 10$");
+        }
+        try {
+            Choice.main(new String[0]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static int incrementIndex(int i) {

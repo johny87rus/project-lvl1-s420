@@ -35,8 +35,8 @@
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
         <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
-
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+        <sonar.host.url>http://dev.home:9000</sonar.host.url>
     </properties>
 
     <dependencies>
@@ -231,7 +231,15 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>2.7.1</version>
+                <version>3.5.0.1254</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sonar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

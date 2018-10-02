@@ -6,14 +6,14 @@ public class BlackJack {
 
     private static int[] cards; // Основная колода
     private static int cursor; // Счётчик карт основной колоды
-    private static int[] playersMoney = {100, 100};
+    private static int[] playersMoney = {Choice.cash, 100};
     private static final int MAX_VALUE = 21;
 
     public static void main(String[] args) throws IOException {
         int sum1;
         int sum2;
         int last;
-        while(playersMoney[0]>0 && playersMoney[1]>0) {
+
             initRound();
             sum1 = sum2 = 0;
             last = addCard2Player();
@@ -42,16 +42,21 @@ public class BlackJack {
             System.out.printf("Сумма ваших очков - %d, сумма компьютера - %d%n", sum1, sum2);
             if (sum2<=MAX_VALUE && (sum1>MAX_VALUE || sum1<sum2)) {
                 System.out.println("Вы проиграли раунд! Теряете 10$");
-                playersMoney[0] -= 10;
+                Choice.cash -= 10;
                 playersMoney[1] += 10;
             }
             else if (sum1<=MAX_VALUE && (sum2>MAX_VALUE || sum2<sum1)) {
                 System.out.println("Вы выиграли раунд! Получите 10$");
-                playersMoney[0] += 10;
+                Choice.cash += 10;
                 playersMoney[1] -= 10;
             } else {
                 System.out.println("Ничья, каждый остается при своих!");
             }
+
+        try {
+            Choice.main(new String[0]);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         if (playersMoney[0] > 0)
