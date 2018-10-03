@@ -11,55 +11,34 @@ public class BlackJack {
     private static int[] cards; // Основная колода
     private static int cursor; // Счётчик карт основной колоды
     private static final int MAX_VALUE = 21;
+    private static int SUM1;
+    private static int SUM2;
 
     public static void main(String[] args) throws IOException {
-        int sum1;
-        int sum2;
-        int last;
 
-            initRound();
-            sum1 = sum2 = 0;
-            last = addCard2Player();
-            sum1 += value(last);
-            String player = "Вам выпала карта {}";
-            log.info(player, CardUtils.toString(last));
-            last = addCard2Player();
-            sum1 += value(last);
-            log.info(player, CardUtils.toString(last));
-            while (sum1<20 && confirm("Берём ещё?")) {
-                last = addCard2Player();
-                sum1 += value(last);
-                log.info(player, CardUtils.toString(last));
-            }
+        initRound();
+        while (SUM1<20) {
+            if (cursor<2) {
+                log.info("Вам выпала карта : {}", addCard2Player());
+            } else if (confirm("Берём ещё?")) {
+                log.info("Вам выпала карта : {}", addCard2Player());
+            } else break;
+        }
+        log.info("Ход компьютера");
+        while (SUM2<17) {
+            log.info("Компьютеру выпала карта : {}", addCard2Computer());
+        }
 
-            last = addCard2Player();
-            sum2 += value(last);
-            String computer = "Компьютеру выпала карта {}";
-            log.info(computer, CardUtils.toString(last));
-            last = addCard2Player();
-            sum2 += value(last);
-            log.info(computer, CardUtils.toString(last));
-            while (sum2<18) {
-                last = addCard2Player();
-                sum2 += value(last);
-                log.info(computer, CardUtils.toString(last));
-            }
-            log.info("Сумма ваших очков - {}, сумма компьютера - {}", sum1, sum2);
-            if (sum2<=MAX_VALUE && (sum1>MAX_VALUE || sum1<sum2)) {
-                log.info("Вы проиграли раунд! Теряете 10$");
-                Choice.cash -= 10;
-            }
-            else if (sum1<=MAX_VALUE && (sum2>MAX_VALUE || sum2<sum1)) {
-                log.info("Вы выиграли раунд! Получите 10$");
-                Choice.cash += 10;
-            } else {
-                log.info("Ничья, каждый остается при своих!");
-            }
+        log.info("Сумма ваших очков - {}, сумма компьютера - {}", SUM1, SUM2);
+        int result = result();
+        if (result==1) log.info("Вы выиграли раунд! Получите 10$");
+        else if (result==-1) log.info("Вы проиграли раунд! Теряете 10$");
+        else log.info("Ничья, каждый остается при своих!");
 
         try {
             Choice.main(new String[0]);
         } catch (IOException e) {
-            log.error(e.getStackTrace().toString(),e);
+            log.error("Произошла ошибка ввода-вывода");
         }
     }
 
@@ -72,14 +51,34 @@ public class BlackJack {
         }
     }
 
-    private static int addCard2Player() {
-        return cards[cursor++];
+    private static String addCard2Player() {
+        int temp = cards[cursor++];
+        SUM1 += value(temp);
+        return CardUtils.toString(temp);
+    }
+    private static String addCard2Computer() {
+        int temp = cards[cursor++];
+        SUM2 += value(temp);
+        return CardUtils.toString(temp);
     }
 
     private static void initRound() {
         log.info("У Вас {}$ ! Начинаем новый раунд!", Choice.cash);
         cards = CardUtils.getShaffledCards();
-        cursor = 0;
+        cursor = SUM1 = SUM2 = 0;
+    }
+
+    private static int result() {
+        if (SUM2<=MAX_VALUE && (SUM1>MAX_VALUE || SUM1<SUM2)) {
+            Choice.cash -= 10;
+            return -1;
+        }
+        else if (SUM1<=MAX_VALUE && (SUM2>MAX_VALUE || SUM2<SUM1)) {
+            Choice.cash += 10;
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     private static int value(int card) {

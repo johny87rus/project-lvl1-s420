@@ -76,7 +76,7 @@ public class Drunkard {
         try {
             Choice.main(new String[0]);
         } catch (IOException e) {
-            log.error(e.getStackTrace().toString(),e);
+            log.error("Произошла ошибка ввода-вывода");
         }
     }
 
