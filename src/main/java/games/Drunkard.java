@@ -1,6 +1,7 @@
 package games;
 
 import org.apache.commons.math3.util.MathArrays;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 
@@ -8,11 +9,14 @@ import static games.CardUtils.CARDS_TOTAL_COUNT;
 import static games.CardUtils.getPar;
 
 public class Drunkard {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Drunkard.class);
     private static int[][] playersCards = new int[2][CARDS_TOTAL_COUNT];
     private static int[] playersCardsBeginCursors = new int[2];
     private static int[] playersCardsEndCursors = new int[2];
 
     public static void main(String[] args) {
+        log.info("У вас {}$, ставка 10$", Choice.cash);
         generateCards(playersCards);
         int[] player1Cards = playersCards[0];
         int[] player2Cards = playersCards[1];
@@ -30,27 +34,27 @@ public class Drunkard {
             playersCardsBeginCursors[0]=incrementIndex(playersCardsBeginCursors[0]);
             player2Card = player2Cards[playersCardsBeginCursors[1]];
             playersCardsBeginCursors[1]=incrementIndex(playersCardsBeginCursors[1]);
-            System.out.printf("Игрок №1 карта : %s, игрок №2 карта : %s. ", CardUtils.toString(player1Card), CardUtils.toString(player2Card));
+            log.info("Игрок №1 карта : {}, игрок №2 карта : {}. ", CardUtils.toString(player1Card), CardUtils.toString(player2Card));
             if (getPar(player1Card).ordinal()>getPar(player2Card).ordinal() && !(getPar(player2Card)== CardUtils.Par.SIX && getPar(player1Card)== CardUtils.Par.ACE) || getPar(player1Card)== CardUtils.Par.SIX && getPar(player2Card)== CardUtils.Par.ACE) {
                 player1Cards[playersCardsEndCursors[0]]=player1Card;
                 playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
                 player1Cards[playersCardsEndCursors[0]]=player2Card;
                 playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
-                System.out.print("Выиграл игрок 1!");
+                log.info("Выиграл игрок 1!");
                 flag=1;
             } else if (getPar(player1Card).ordinal()<getPar(player2Card).ordinal() || getPar(player2Card)== CardUtils.Par.SIX && getPar(player1Card)== CardUtils.Par.ACE) {
                 player2Cards[playersCardsEndCursors[1]]=player2Card;
                 playersCardsEndCursors[1]=incrementIndex(playersCardsEndCursors[1]);
                 player2Cards[playersCardsEndCursors[1]]=player1Card;
                 playersCardsEndCursors[1]=incrementIndex(playersCardsEndCursors[1]);
-                System.out.print("Выиграл игрок 2!");
+                log.info("Выиграл игрок 2!");
                 flag=2;
             } else {
                 player1Cards[playersCardsEndCursors[0]]=player1Card;
                 playersCardsEndCursors[0]=incrementIndex(playersCardsEndCursors[0]);
                 player2Cards[playersCardsEndCursors[1]]=player2Card;
                 playersCardsEndCursors[1]=incrementIndex(playersCardsEndCursors[1]);
-                System.out.print("Спор - каждый остаётся при своих!");
+                log.info("Спор - каждый остаётся при своих!");
                 flag=0;
             }
             sum1 = playersCardsBeginCursors[0]<playersCardsEndCursors[0] ? playersCardsEndCursors[0]-playersCardsBeginCursors[0] : playersCardsEndCursors[0]-playersCardsBeginCursors[0]+CARDS_TOTAL_COUNT;
@@ -59,20 +63,20 @@ public class Drunkard {
                 sum1 = flag==1 ? sum1 : 0;
                 sum2 = flag==2 ? sum2 : 0;
             }
-            System.out.printf(" У игрока №1 %d карт, у игрока №2 %d карт%n", sum1, sum2);
+            log.info(" У игрока №1 {} карт, у игрока №2 {} карт", sum1, sum2);
         }
         if (sum1>sum2) {
             Choice.cash += 10;
-            System.out.println("Игра окончена! Вы выиграли 10$");
+            log.info("Игра окончена! Вы выиграли 10$! В вашем кошельке {}$!", Choice.cash);
         }
         else {
             Choice.cash -= 10;
-            System.out.println("Игра окончена! Вы проиграли 10$");
+            log.info("Игра окончена! Вы проиграли 10$! В вашем кошельке {}$!", Choice.cash);
         }
         try {
             Choice.main(new String[0]);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getStackTrace().toString(),e);
         }
     }
 

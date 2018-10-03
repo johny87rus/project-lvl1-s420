@@ -1,14 +1,17 @@
 package games;
 
+import org.slf4j.Logger;
+
 import java.io.IOException;
 
 public class Choice {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Choice.class);
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
     static int cash = 100;
 
     public static void main(String[] args) throws IOException {
         if (cash > 0) {
-            System.out.println("Выберите игру:\n1 - \"однорукий бандит\", 2 - \"пьяница\", 3 - \"очко\"");
+            log.info("Выберите игру:\n1 - \"однорукий бандит\", 2 - \"пьяница\", 3 - \"очко\"");
             switch (getCharacterFromUser()) {
                 case '1':
                     Slot.main(new String[0]);
@@ -20,10 +23,10 @@ public class Choice {
                     BlackJack.main(new String[0]);
                     break;
                 default:
-                    System.out.println("Игры с таким номером нет!");
+                    log.info("Игры с таким номером нет!");
             }
         }
-        else System.out.println("К сожалению у вас кончились деньги, до свидания!");
+        else log.info("К сожалению у вас кончились деньги, до свидания!");
     }
 
 

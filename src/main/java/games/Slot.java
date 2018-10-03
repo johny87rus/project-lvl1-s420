@@ -1,9 +1,12 @@
 package games;
 
+import org.slf4j.Logger;
+
 import java.io.IOException;
 import java.util.Random;
 
 public class Slot {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Slot.class);
     private static final int BET = 10;
     private static final int WIN = 10000;
     private static final int SIZE = 8;
@@ -17,23 +20,23 @@ public class Slot {
         firstCounter = secondCounter = thirdCounter = START_COUNTER;
         Random random = new Random();
 
-            System.out.printf("У Вас %d$, ставка - %d$%n", Choice.cash, BET);
-            System.out.println("Крутим барабаны!Розыгрыш принёс следующие результаты:");
+            log.info("У Вас {}$, ставка - {}$", Choice.cash, BET);
+            log.info("Крутим барабаны!Розыгрыш принёс следующие результаты:");
             firstCounter = (firstCounter + random.nextInt(SIZE)) % SIZE;
             secondCounter = (secondCounter + random.nextInt(SIZE)) % SIZE;
             thirdCounter = (thirdCounter + random.nextInt(SIZE)) % SIZE;
-            System.out.printf("первый барабан - %d, второй - %d, третий - %d%n", firstCounter, secondCounter, thirdCounter);
+            log.info("первый барабан - {}, второй - {}, третий - {}", firstCounter, secondCounter, thirdCounter);
             if (firstCounter==secondCounter && secondCounter==thirdCounter) {
                 Choice.cash += WIN;
-                System.out.printf("Поздравляем! Вы выиграли %d$ ! Ваш капитал теперь составляет: %d$%n", WIN, Choice.cash);
+                log.info("Поздравляем! Вы выиграли {}$ ! Ваш капитал теперь составляет: {}$", WIN, Choice.cash);
             } else {
                 Choice.cash -= BET;
-                System.out.printf("Проигрыш %d$, ваш капитал теперь составляет: %d$%n", BET, Choice.cash);
+                log.info("Проигрыш {}$, ваш капитал теперь составляет: {}$", BET, Choice.cash);
             }
         try {
             Choice.main(new String[0]);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getStackTrace().toString(),e);
         }
 
     }
