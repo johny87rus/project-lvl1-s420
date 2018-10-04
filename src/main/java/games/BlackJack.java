@@ -11,25 +11,22 @@ public class BlackJack {
     private static int[] cards; // Основная колода
     private static int cursor; // Счётчик карт основной колоды
     private static final int MAX_VALUE = 21;
-    private static int sum1;
-    private static int sum2;
+    private static int sum[];
 
     public static void main(String... args) throws IOException {
 
         initRound();
-        while (sum1<20) {
-            if (cursor<2) {
-                log.info("Вам выпала карта : {}", addCard2Player());
-            } else if (confirm("Берём ещё?")) {
-                log.info("Вам выпала карта : {}", addCard2Player());
+        while (sum[0]<20) {
+            if (cursor<2 || (confirm("Берём ещё?"))) {
+                log.info("Вам выпала карта : {}", addCard(0));
             } else break;
         }
         log.info("Ход компьютера");
-        while (sum2<17) {
-            log.info("Компьютеру выпала карта : {}", addCard2Computer());
+        while (sum[1]<17) {
+            log.info("Компьютеру выпала карта : {}", addCard(1));
         }
 
-        log.info("Сумма ваших очков - {}, сумма компьютера - {}", sum1, sum2);
+        log.info("Сумма ваших очков - {}, сумма компьютера - {}", sum[0], sum[1]);
         int result = result();
         if (result==1) log.info("Вы выиграли раунд! Получите 10$");
         else if (result==-1) log.info("Вы проиграли раунд! Теряете 10$");
@@ -51,29 +48,25 @@ public class BlackJack {
         }
     }
 
-    private static String addCard2Player() {
+    private static String addCard (int player) {
         int temp = cards[cursor++];
-        sum1 += value(temp);
-        return CardUtils.toString(temp);
-    }
-    private static String addCard2Computer() {
-        int temp = cards[cursor++];
-        sum2 += value(temp);
+        sum[player] += value(temp);
         return CardUtils.toString(temp);
     }
 
     private static void initRound() {
         log.info("У Вас {}$ ! Начинаем новый раунд!", Choice.cash);
         cards = CardUtils.getShaffledCards();
-        cursor = sum1 = sum2 = 0;
+        sum = new int[2];
+        cursor = sum[0] = sum[1] = 0;
     }
 
     private static int result() {
-        if (sum2<=MAX_VALUE && (sum1>MAX_VALUE || sum1<sum2)) {
+        if (sum[1]<=MAX_VALUE && (sum[0]>MAX_VALUE || sum[0]<sum[1])) {
             Choice.cash -= 10;
             return -1;
         }
-        else if (sum1<=MAX_VALUE && (sum2>MAX_VALUE || sum2<sum1)) {
+        else if (sum[0]<=MAX_VALUE && (sum[1]>MAX_VALUE || sum[1]<sum[0])) {
             Choice.cash += 10;
             return 1;
         } else {
