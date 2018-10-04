@@ -17,7 +17,7 @@ public class BlackJack {
 
         initRound();
         while (sum[0]<20) {
-            if (cursor<2 || (confirm("Берём ещё?"))) {
+            if (cursor<2 || confirm("Берём ещё?")) {
                 log.info("Вам выпала карта : {}", addCard(0));
             } else break;
         }
