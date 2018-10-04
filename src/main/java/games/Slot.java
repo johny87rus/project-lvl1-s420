@@ -12,7 +12,7 @@ public class Slot {
     private static final int SIZE = 8;
     private static final int START_COUNTER = 0;
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
 
         int firstCounter;
         int secondCounter;

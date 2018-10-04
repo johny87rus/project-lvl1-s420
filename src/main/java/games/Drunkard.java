@@ -20,7 +20,7 @@ public class Drunkard {
     private static int player2Card;
     private static int flag;
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         log.info("У вас {}$, ставка 10$", Choice.cash);
         generateCards(playersCards);
         int result;

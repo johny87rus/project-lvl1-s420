@@ -14,7 +14,7 @@ public class BlackJack {
     private static int SUM1;
     private static int SUM2;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String... args) throws IOException {
 
         initRound();
         while (SUM1<20) {

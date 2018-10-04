@@ -14,13 +14,13 @@ public class Choice {
             log.info("Выберите игру:\n1 - \"однорукий бандит\", 2 - \"пьяница\", 3 - \"очко\"");
             switch (getCharacterFromUser()) {
                 case '1':
-                    Slot.main(new String[0]);
+                    Slot.main();
                     break;
                 case '2':
-                    Drunkard.main(new String[0]);
+                    Drunkard.main();
                     break;
                 case '3':
-                    BlackJack.main(new String[0]);
+                    BlackJack.main();
                     break;
                 default:
                     log.info("Игры с таким номером нет!");
