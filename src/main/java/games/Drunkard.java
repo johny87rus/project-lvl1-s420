@@ -14,8 +14,8 @@ public class Drunkard {
     private static int[][] playersCards = new int[2][CARDS_TOTAL_COUNT];
     private static int[] playersCardsBeginCursors = new int[2];
     private static int[] playersCardsEndCursors = new int[2];
-    private static int SUM1;
-    private static int SUM2;
+    private static int sum1;
+    private static int sum2;
     private static int player1Card;
     private static int player2Card;
     private static int flag;
@@ -36,9 +36,9 @@ public class Drunkard {
                 log.info("Спор - каждый остаётся при своих!");
             }
             calculateSums();
-            log.info(" У игрока №1 {} карт, у игрока №2 {} карт", SUM1, SUM2);
+            log.info(" У игрока №1 {} карт, у игрока №2 {} карт", sum1, sum2);
         }
-        if (SUM1>SUM2) {
+        if (sum1>sum2) {
             Choice.cash += 10;
             log.info("Игра окончена! Вы выиграли 10$! В вашем кошельке {}$!", Choice.cash);
         }
@@ -67,7 +67,7 @@ public class Drunkard {
             if (i<CARDS_TOTAL_COUNT/2) cards[0][i]=src[i];
             else cards[1][i-CARDS_TOTAL_COUNT/2]=src[i];
         }
-        SUM1 = SUM2 = CARDS_TOTAL_COUNT/2;
+        sum1 = sum2 = CARDS_TOTAL_COUNT/2;
         playersCardsBeginCursors[0]=0;
         playersCardsBeginCursors[1]=0;
         playersCardsEndCursors[0]=CARDS_TOTAL_COUNT/2;
@@ -76,7 +76,7 @@ public class Drunkard {
     }
 
     private static boolean gameOver() {
-        return SUM1!=CARDS_TOTAL_COUNT && SUM2!=CARDS_TOTAL_COUNT ? false : true;
+        return sum1!=CARDS_TOTAL_COUNT && sum2!=CARDS_TOTAL_COUNT ? false : true;
     }
 
     private static void takeCards() {
@@ -112,11 +112,11 @@ public class Drunkard {
     }
 
     private static void calculateSums() {
-        SUM1 = playersCardsBeginCursors[0]<playersCardsEndCursors[0] ? playersCardsEndCursors[0]-playersCardsBeginCursors[0] : playersCardsEndCursors[0]-playersCardsBeginCursors[0]+CARDS_TOTAL_COUNT;
-        SUM2 = playersCardsBeginCursors[1]<playersCardsEndCursors[1] ? playersCardsEndCursors[1]-playersCardsBeginCursors[1] : playersCardsEndCursors[1]-playersCardsBeginCursors[1]+CARDS_TOTAL_COUNT;
-        if (SUM1==SUM2 && SUM2==CARDS_TOTAL_COUNT) {
-            SUM1 = flag==1 ? SUM1 : 0;
-            SUM2 = flag==2 ? SUM2 : 0;
+        sum1 = playersCardsBeginCursors[0]<playersCardsEndCursors[0] ? playersCardsEndCursors[0]-playersCardsBeginCursors[0] : playersCardsEndCursors[0]-playersCardsBeginCursors[0]+CARDS_TOTAL_COUNT;
+        sum2 = playersCardsBeginCursors[1]<playersCardsEndCursors[1] ? playersCardsEndCursors[1]-playersCardsBeginCursors[1] : playersCardsEndCursors[1]-playersCardsBeginCursors[1]+CARDS_TOTAL_COUNT;
+        if (sum1==sum2 && sum2==CARDS_TOTAL_COUNT) {
+            sum1 = flag==1 ? sum1 : 0;
+            sum2 = flag==2 ? sum2 : 0;
         }
     }
 }
