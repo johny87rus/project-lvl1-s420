@@ -9,7 +9,7 @@ public class Choice {
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
     static int cash = 100;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String... args) throws IOException {
         if (cash > 0) {
             log.info("Выберите игру:\n1 - \"однорукий бандит\", 2 - \"пьяница\", 3 - \"очко\"");
             switch (getCharacterFromUser()) {

@@ -33,7 +33,7 @@ public class BlackJack {
         else log.info("Ничья, каждый остается при своих!");
 
         try {
-            Choice.main(new String[0]);
+            Choice.main();
         } catch (IOException e) {
             log.error("Произошла ошибка ввода-вывода");
         }

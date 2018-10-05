@@ -34,7 +34,7 @@ public class Slot {
                 log.info("Проигрыш {}$, ваш капитал теперь составляет: {}$", BET, Choice.cash);
             }
         try {
-            Choice.main(new String[0]);
+            Choice.main();
         } catch (IOException e) {
             log.error("Произошла ошибка ввода-вывода");
         }

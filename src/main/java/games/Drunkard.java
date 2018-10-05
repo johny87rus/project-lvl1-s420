@@ -47,7 +47,7 @@ public class Drunkard {
             log.info("Игра окончена! Вы проиграли 10$! В вашем кошельке {}$!", Choice.cash);
         }
         try {
-            Choice.main(new String[0]);
+            Choice.main();
         } catch (IOException e) {
             log.error("Произошла ошибка ввода-вывода");
         }
