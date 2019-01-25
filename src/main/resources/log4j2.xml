@@ -8,7 +8,8 @@
                 name="FileLogger"
                 fileName="logs/java-games.log"
                 filePattern="logs/project-lvl1-s420-%d{yyyy-MM-dd}.log"
-                append="true">
+                append="true"
+                immediateFlush="false">
             <PatternLayout
                     pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <SizeBasedTriggeringPolicy size="10MB"/>
